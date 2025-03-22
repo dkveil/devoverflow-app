@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "lint:fix": "next lint --fix",
+    "prepare": "husky"
   },
   "dependencies": {
     "next": "15.2.3",
@@ -29,7 +30,14 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-playwright": "^2.2.0",
     "eslint-plugin-testing-library": "^7.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "pnpm lint"
+    ]
   }
 }

@@ -50,5 +50,19 @@
 
   "files.associations": {
     "*.css": "tailwindcss"
+  },
+
+  "files.exclude": {
+    "**/*.next": true,
+    "**/node_modules": true,
+    "**/.husky": true,
+    "**/.git": true,
+    "**/.github": true,
+    "**/.vscode": true,
+    "**/LICENSE": true,
+    "**/next-env.d.ts": true,
+    "**/vercel.json": true,
+    "**/postcss.config.mjs": true,
+    "**/pnpm-lock.yaml": true
   }
 }

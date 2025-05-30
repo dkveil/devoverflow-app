@@ -4,9 +4,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+:root {
+  --font-inter: 'Inter', sans-serif;
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+}
+
+body {
+  font-family: var(--font-inter);
+}
+
 @theme {
+  --font-inter: 'Inter', sans-serif;
+  --font-space-grotesk: 'Space Grotesk', sans-serif;
+
   --color-primary-100: #fff1e6;
-  --color-primary-500: #ff7000;
+  --color-primary-500: #b388ff;
 
   --color-dark-100: #000000;
   --color-dark-200: #0f1117;

@@ -56,7 +56,7 @@ export default antfu({
     'test/prefer-lowercase-title': 'off', // Allow using uppercase titles in test titles
     'ts/no-redeclare': 'off', // Allow variable redeclarations in TypeScript
     'no-console': ['warn'], // Warn when console statements are used
-    'node/no-process-env': ['error'], // Disallow the use of process.env directly
+    'node/no-process-env': ['off'], // Disallow the use of process.env directly
     'perfectionist/sort-imports': ['error', {
       tsconfigRootDir: '.',
     }], // Sort imports according to TypeScript config
@@ -65,5 +65,6 @@ export default antfu({
       ignore: ['README.md'],
     }], // Enforce kebab-case for filenames
     'style/quotes': ['error', 'single'], // Enforce single quotes
+    'curly': 'off', // Disable curly rule
   },
 });

@@ -46,6 +46,10 @@ body {
   font-family: var(--font-inter);
 }
 
+button {
+  cursor: pointer;
+}
+
 @theme {
   --font-inter: var(--font-inter);
   --font-space-grotesk: var(--font-space-grotesk);

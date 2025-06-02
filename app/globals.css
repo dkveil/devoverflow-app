@@ -304,7 +304,7 @@ button {
 }
 
 @utility primary-gradient {
-  background: linear-gradient(129deg, #b388ff 0%, #e2995f 100%);
+  background: linear-gradient(129deg, #b388ff 0%, #7c4dff 100%);
 }
 
 @utility dark-gradient {
@@ -317,7 +317,7 @@ button {
 }
 
 @utility primary-text-gradient {
-  background: linear-gradient(129deg, #b388ff 0%, #e2995f 100%);
+  background: linear-gradient(129deg, #b388ff 0%, #7c4dff 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

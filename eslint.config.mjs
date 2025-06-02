@@ -66,5 +66,7 @@ export default antfu({
     }], // Enforce kebab-case for filenames
     'style/quotes': ['error', 'single'], // Enforce single quotes
     'curly': 'off', // Disable curly rule
+    'no-undef': 'off',
+
   },
 });

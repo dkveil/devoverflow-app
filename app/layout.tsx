@@ -2,11 +2,11 @@ import type { Metadata } from 'next';
 
 import { SessionProvider } from 'next-auth/react';
 import localFont from 'next/font/local';
-
-import { auth } from '@/auth';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 
 import './globals.css';
 
+import { auth } from '@/auth';
 import { Toaster } from '@/components/ui/sonner';
 import ThemeProvider from '@/context/theme';
 
@@ -49,7 +49,7 @@ export default async function RootLayout({
       <SessionProvider session={session}>
         <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            {children}
+            <NuqsAdapter>{children}</NuqsAdapter>
             <Toaster />
           </ThemeProvider>
         </body>

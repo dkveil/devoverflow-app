@@ -5,10 +5,7 @@ import { getDeviconIcon } from '@/lib/utils';
 
 import { Badge } from '../ui/badge';
 
-type Props = {
-  _id: string;
-  name: string;
-  questions: number;
+type Props = Tag & {
   showCount?: boolean;
   compact?: boolean;
 };

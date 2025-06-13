@@ -5,6 +5,7 @@ import { HomeFilter } from '@/components/filters/home-filter';
 import { LocalSearch } from '@/components/search/local-search';
 import { Button } from '@/components/ui/button';
 import ROUTES from '@/constants/routes';
+import dbConnect from '@/lib/mongoose';
 
 const questions: Question[] = [
   {
@@ -42,6 +43,8 @@ type SearchParams = {
 };
 
 export default async function Home({ searchParams }: SearchParams) {
+  await dbConnect();
+
   const { query = '', filter = '' } = await searchParams;
 
   const filteredQuestions = questions.filter((question) => {

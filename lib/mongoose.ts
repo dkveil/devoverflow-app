@@ -2,6 +2,8 @@ import type { Mongoose } from 'mongoose';
 
 import mongoose from 'mongoose';
 
+import logger from './logger';
+
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
@@ -21,6 +23,7 @@ if (!cached) {
 
 export async function dbConnect(): Promise<Mongoose> {
   if (cached.conn) {
+    logger.info('MongoDB already connected');
     return cached.conn;
   }
 
@@ -28,11 +31,10 @@ export async function dbConnect(): Promise<Mongoose> {
     cached.promise = mongoose.connect(MONGODB_URI!, {
       dbName: 'devoverflow',
     }).then((result) => {
-      // eslint-disable-next-line no-console
-      console.log('MongoDB connected');
+      logger.info('MongoDB connected');
       return result;
     }).catch((error) => {
-      console.error('MongoDB connection failed', error);
+      logger.error('MongoDB connection failed', error);
       throw error;
     });
   }

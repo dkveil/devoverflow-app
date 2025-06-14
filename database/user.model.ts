@@ -6,16 +6,16 @@ export type IUser = {
   name: string;
   username: string;
   email: string;
-  bio: string;
-  image: string;
-  location: string;
-  portfolio: string;
-  reputation: number;
-  socialLinks: {
-    github: string;
-    twitter: string;
-    linkedin: string;
-    website: string;
+  bio?: string;
+  image?: string;
+  location?: string;
+  portfolio?: string;
+  reputation?: number;
+  socialLinks?: {
+    github?: string;
+    twitter?: string;
+    linkedin?: string;
+    website?: string;
   };
 };
 
@@ -26,7 +26,7 @@ const UserSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true, minlength: 3, maxlength: 50 },
   email: { type: String, required: true, unique: true, lowercase: true },
   bio: { type: String, maxlength: 160 },
-  image: { type: String, default: 'https://ui-avatars.com/api/?name=' },
+  image: { type: String },
   location: { type: String },
   portfolio: { type: String },
   reputation: { type: Number, default: 0 },

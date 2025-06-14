@@ -6,6 +6,9 @@ import { fetchHandler } from './handlers/fetch';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:3137/api';
 
 export const api = {
+  auth: {
+    oAuthSignIn: ({ provider, providerAccountId, user }: SignInWithOAuthParams) => fetchHandler(`${API_BASE_URL}/auth/oauth-signin`, { method: 'POST', body: JSON.stringify({ provider, providerAccountId, user }) }),
+  },
   users: {
     getAll: () => fetchHandler(`${API_BASE_URL}/users`),
     getById: (id: string) => fetchHandler(`${API_BASE_URL}/users/${id}`),

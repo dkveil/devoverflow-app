@@ -149,5 +149,15 @@ export const AccountSchema = z.object({
     .string()
     .min(1, { message: 'Provider account ID is required.' })
     .max(100, { message: 'Provider account ID cannot exceed 100 characters.' }),
+});
 
+export const OAuthSignInSchema = z.object({
+  provider: z.enum(['github', 'google']),
+  providerAccountId: z.string().min(1, { message: 'Provider account ID is required.' }),
+  user: z.object({
+    name: z.string().min(1, { message: 'Name is required.' }).max(50, { message: 'Name cannot exceed 50 characters.' }),
+    username: z.string().min(3, { message: 'Username must be at least 3 characters long.' }).max(30, { message: 'Username cannot exceed 30 characters.' }),
+    email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Please provide a valid email address.' }),
+    image: z.string().url({ message: 'Please provide a valid image URL.' }).optional(),
+  }),
 });

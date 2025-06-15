@@ -43,7 +43,7 @@ class MemoryCache {
   };
 
   set<T>(key: string, data: ActionResponse<T>, ttl: number, url: string): void {
-    if (process.env.NODE_ENV === 'development') {
+    if (getEnvVar('NODE_ENV') === 'development') {
       logger.debug(`Caching disabled in development for ${url}`);
       return;
     }
@@ -62,7 +62,7 @@ class MemoryCache {
   }
 
   get<T>(key: string): ActionResponse<T> | null {
-    if (process.env.NODE_ENV === 'development') {
+    if (getEnvVar('NODE_ENV') === 'development') {
       return null;
     }
 
@@ -398,6 +398,14 @@ async function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function getEnvVar(key: string, defaultValue: string = ''): string {
+  try {
+    return typeof process !== 'undefined' && process.env ? (process.env[key] || defaultValue) : defaultValue;
+  } catch {
+    return defaultValue;
+  }
+}
+
 export async function fetchHandler<T>(url: string, options: FetchOptions = {}): Promise<ActionResponse<T>> {
   const startTime = Date.now();
   const {
@@ -531,7 +539,6 @@ type ComprehensiveStats = {
   environment: {
     nodeEnv: string;
     cacheEnabled: boolean;
-    uptime: number;
   };
 };
 
@@ -557,9 +564,8 @@ export const fetchUtils = {
     rateLimit: rateLimiter.getStats(),
     requests: requestTracker.getStats(),
     environment: {
-      nodeEnv: process.env.NODE_ENV || 'development',
-      cacheEnabled: process.env.NODE_ENV !== 'development',
-      uptime: process.uptime(),
+      nodeEnv: getEnvVar('NODE_ENV', 'development'),
+      cacheEnabled: getEnvVar('NODE_ENV') !== 'development',
     },
   }),
 
@@ -600,7 +606,6 @@ export const fetchUtils = {
 
     logger.info('\n⚙️  Environment:');
     logger.info(`  Node Environment: ${stats.environment.nodeEnv}`);
-    logger.info(`  Uptime: ${Math.round(stats.environment.uptime)}s`);
 
     if (Object.keys(stats.requests.errorsByType).length > 0) {
       logger.info('\n❌ Error Breakdown:');

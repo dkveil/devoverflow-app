@@ -1,11 +1,11 @@
 import Link from 'next/link';
 
+import { auth } from '@/auth';
 import { QuestionCard } from '@/components/cards/question-card';
 import { HomeFilter } from '@/components/filters/home-filter';
 import { LocalSearch } from '@/components/search/local-search';
 import { Button } from '@/components/ui/button';
 import ROUTES from '@/constants/routes';
-import dbConnect from '@/lib/mongoose';
 
 const questions: Question[] = [
   {
@@ -43,7 +43,9 @@ type SearchParams = {
 };
 
 export default async function Home({ searchParams }: SearchParams) {
-  await dbConnect();
+  const session = await auth();
+
+  console.log('Session: ', session);
 
   const { query = '', filter = '' } = await searchParams;
 

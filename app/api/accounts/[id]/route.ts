@@ -10,8 +10,8 @@ type Params = {
   id: string;
 };
 
-export async function GET(_request: Request, { params }: { params: Params }) {
-  const { id } = params;
+export async function GET(_request: Request, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
 
   if (!id) throw new NotFoundError('Account');
 
@@ -31,8 +31,8 @@ export async function GET(_request: Request, { params }: { params: Params }) {
   }
 }
 
-export async function DELETE(_request: Request, { params }: { params: Params }) {
-  const { id } = params;
+export async function DELETE(_request: Request, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
 
   if (!id) throw new NotFoundError('User');
 
@@ -52,8 +52,8 @@ export async function DELETE(_request: Request, { params }: { params: Params }) 
   }
 }
 
-export async function PUT(request: Request, { params }: { params: Params }) {
-  const { id } = params;
+export async function PUT(request: Request, { params }: { params: Promise<Params> }) {
+  const { id } = await params;
 
   if (!id) throw new NotFoundError('User');
 

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { auth, signOut } from '@/auth';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -14,7 +15,10 @@ import ROUTES from '@/constants/routes';
 
 import { NavLinks } from './nav-links';
 
-export function MobileNavigation() {
+export async function MobileNavigation() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
   return (
     <Sheet>
       <SheetTrigger>
@@ -41,20 +45,37 @@ export function MobileNavigation() {
           </SheetClose>
 
           <div className="flex flex-col gap-3">
-            <SheetClose asChild>
-              <Link href={ROUTES.SIGN_IN}>
-                <Button className="small-medium btn-secondary min-h-[41px] w-full px-4 py-3 shadow-none">
-                  <span className="primary-text-gradient">Log In</span>
-                </Button>
-              </Link>
-            </SheetClose>
-            <SheetClose asChild>
-              <Link href={ROUTES.SIGN_UP}>
-                <Button className="small-medium btn-tertiary text-dark400_light900 min-h-[41px] w-full px-4 py-3 border shadow-none">
-                  Sign Up
-                </Button>
-              </Link>
-            </SheetClose>
+            {userId
+              ? (
+                  <SheetClose asChild>
+                    <form action={async () => {
+                      'use server';
+
+                      await signOut();
+                    }}
+                    >
+
+                    </form>
+                  </SheetClose>
+                )
+              : (
+                  <>
+                    <SheetClose asChild>
+                      <Link href={ROUTES.SIGN_IN}>
+                        <Button className="small-medium btn-secondary min-h-[41px] w-full px-4 py-3 shadow-none">
+                          <span className="primary-text-gradient">Log In</span>
+                        </Button>
+                      </Link>
+                    </SheetClose>
+                    <SheetClose asChild>
+                      <Link href={ROUTES.SIGN_UP}>
+                        <Button className="small-medium btn-tertiary text-dark400_light900 min-h-[41px] w-full px-4 py-3 border shadow-none">
+                          Sign Up
+                        </Button>
+                      </Link>
+                    </SheetClose>
+                  </>
+                )}
           </div>
         </div>
       </SheetContent>

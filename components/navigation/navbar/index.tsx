@@ -1,10 +1,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { auth } from '@/auth';
+import { UserAvatar } from '@/components/user-avatar';
+
 import { MobileNavigation } from './mobile-navigation';
 import { ThemeToggler } from './theme-toggler';
 
-export default function Navbar() {
+export default async function Navbar() {
+  const session = await auth();
+
   return (
     <nav className="flex-between background-light900_dark200 gap-5 w-full z-50 p-6 sm:px-12  fixed shadow-light-300 dark:shadow-none">
       <Link href="/" className="flex-center gap-2">
@@ -23,6 +28,9 @@ export default function Navbar() {
 
       <div className="flex-between gap-5">
         <ThemeToggler />
+
+        {session?.user?.id && <UserAvatar id={session?.user?.id} name={session.user.name!} image={session.user.image!} />}
+
         <MobileNavigation />
       </div>
     </nav>

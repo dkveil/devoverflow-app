@@ -8,3 +8,10 @@ type SignInWithOAuthParams = {
     image: string;
   };
 };
+
+type AuthCredentials = {
+  name: string;
+  username: string;
+  email: string;
+  password: string;
+};

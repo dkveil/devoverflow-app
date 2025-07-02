@@ -20,7 +20,7 @@ export const api = {
   accounts: {
     getAll: () => fetchHandler(`${API_BASE_URL}/accounts`),
     getById: (id: string) => fetchHandler(`${API_BASE_URL}/accounts/${id}`),
-    getByProvider: (provider: string) => fetchHandler(`${API_BASE_URL}/accounts/provider/${provider}`),
+    getByProvider: (provider: string) => fetchHandler(`${API_BASE_URL}/accounts/provider`, { method: 'POST', body: JSON.stringify({ providerAccountId: provider }) }),
     create: (accountData: Partial<IAccount>) => fetchHandler(`${API_BASE_URL}/accounts`, { method: 'POST', body: JSON.stringify(accountData) }),
     update: (id: string, accountData: Partial<IAccount>) => fetchHandler(`${API_BASE_URL}/accounts/${id}`, { method: 'PUT', body: JSON.stringify(accountData) }),
     delete: (id: string) => fetchHandler(`${API_BASE_URL}/accounts/${id}`, { method: 'DELETE' }),

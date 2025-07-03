@@ -15,3 +15,9 @@ type AuthCredentials = {
   email: string;
   password: string;
 };
+
+type CreateQuestionParams = {
+  title: string;
+  content: string;
+  tags: string[];
+};

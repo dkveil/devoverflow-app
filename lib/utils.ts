@@ -23,7 +23,9 @@ export function getDeviconIcon(name: string) {
 
 export function getTimeStamp(date: Date) {
   const now = new Date();
-  const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
+  const dateObj = new Date(date);
+
+  const secondsAgo = Math.floor((now.getTime() - dateObj.getTime()) / 1000);
 
   const units = [
     { label: 'year', seconds: 31536000 },
@@ -37,6 +39,7 @@ export function getTimeStamp(date: Date) {
 
   for (const unit of units) {
     const interval = Math.floor(secondsAgo / unit.seconds);
+
     if (interval >= 1) {
       return `${interval} ${unit.label}${interval > 1 ? 's' : ''} ago`;
     }

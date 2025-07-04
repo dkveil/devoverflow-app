@@ -18,13 +18,17 @@ export function Metric(props: Props) {
 
   const metricContent = (
     <>
-      <Image
-        src={imgUrl}
-        width={16}
-        height={16}
-        alt={alt}
-        className={`rounded-full object-contain ${imgStyles}`}
-      />
+      {imgUrl
+        ? (
+            <Image
+              src={imgUrl || ''}
+              width={16}
+              height={16}
+              alt={alt}
+              className={`rounded-full object-contain ${imgStyles}`}
+            />
+          )
+        : null}
 
       <p className={`${textStyles} flex items-center gap-1`}>
         {value}

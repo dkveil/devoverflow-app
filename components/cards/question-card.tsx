@@ -3,8 +3,8 @@ import Link from 'next/link';
 import ROUTES from '@/constants/routes';
 import { getTimeStamp } from '@/lib/utils';
 
-import { TagCard } from '../cards/tag-card';
 import { Metric } from '../metric';
+import { TagCard } from './tag-card';
 
 type Props = {
   question: Question;
@@ -18,6 +18,7 @@ export function QuestionCard(props: Props) {
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row">
         <div>
           <span className="subtle-regular text-dark400_light700 line-clamp-1 flex sm:hidden">
+
             {getTimeStamp(question.createdAt)}
             {' '}
             days ago
@@ -35,7 +36,7 @@ export function QuestionCard(props: Props) {
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Metric
-          imgUrl={question.author.image}
+          imgUrl={question.author?.image}
           alt={question.author.name}
           value={question.author.name}
           title={`• asked ${getTimeStamp(question.createdAt)}`}

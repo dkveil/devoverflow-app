@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from '../ui/form';
 import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
 
 const Editor = dynamic(() => import('../editor'), { ssr: false });
 
@@ -44,6 +45,7 @@ export function QuestionForm({ question, isEdit = false }: Props) {
     resolver: zodResolver(AskQuestionSchema),
     defaultValues: {
       title: question?.title || '',
+      description: question?.description || '',
       content: question?.content || '',
       tags: question?.tags.map(tag => tag.name) || [],
     },
@@ -109,6 +111,7 @@ export function QuestionForm({ question, isEdit = false }: Props) {
         }
         return;
       }
+
       const result = await createQuestion(data);
 
       if (result.success) {
@@ -137,7 +140,7 @@ export function QuestionForm({ question, isEdit = false }: Props) {
           render={({ field }) => (
             <FormItem className="flex w-full flex-col">
               <FormLabel className="paragraph-semibold text-dark400_light800">
-                Question Title
+                Title
                 {' '}
                 <span className="text-primary-500">*</span>
               </FormLabel>
@@ -155,6 +158,30 @@ export function QuestionForm({ question, isEdit = false }: Props) {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem className="flex w-full flex-col">
+              <FormLabel className="paragraph-semibold text-dark400_light800">
+                Short Description
+                {' '}
+              </FormLabel>
+              <FormControl>
+                <Textarea
+                  className="paragraph-regular background-light700_dark300 light-border-2 text-dark300_light700 no-focus min-h-[82px] border resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormDescription className="body-regular mt-2.5 text-light-500">
+                You can add a short description to your question which will be displayed in the question card.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="content"

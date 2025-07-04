@@ -18,6 +18,7 @@ type AuthCredentials = {
 
 type CreateQuestionParams = {
   title: string;
+  description?: string;
   content: string;
   tags: string[];
 };
@@ -25,6 +26,7 @@ type CreateQuestionParams = {
 type UpdateQuestionParams = {
   questionId: string;
   title: string;
+  description?: string;
   content: string;
   tags: string[];
 };

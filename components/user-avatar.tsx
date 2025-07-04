@@ -11,9 +11,11 @@ type Props = {
   name: string;
   image?: string | null;
   className?: string;
+  width?: number;
+  height?: number;
 };
 
-export function UserAvatar({ id, name, image, className = 'h-9 w-9' }: Props) {
+export function UserAvatar({ id, name, image, className = 'h-9 w-9', width = 36, height = 36 }: Props) {
   const initials = name
     .split(' ')
     .map((word: string) => word[0])
@@ -30,8 +32,8 @@ export function UserAvatar({ id, name, image, className = 'h-9 w-9' }: Props) {
                 src={image}
                 alt={name}
                 className="object-cover"
-                width={36}
-                height={36}
+                width={width}
+                height={height}
                 quality={100}
               />
             )

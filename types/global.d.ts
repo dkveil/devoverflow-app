@@ -54,6 +54,14 @@ declare global {
     params: Promise<Record<string, string>>;
     searchParams: Promise<Record<string, string>>;
   };
+
+  type PaginatedSearchParams = {
+    page?: number;
+    pageSize?: number;
+    query?: string;
+    filter?: string;
+    sortBy?: string;
+  };
 }
 
 export {};

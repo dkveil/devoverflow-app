@@ -4,6 +4,7 @@ import { model, models, Schema } from 'mongoose';
 
 export type IQuestion = {
   title: string;
+  description: string;
   content: string;
   tags: Types.ObjectId[];
   views: number;
@@ -18,6 +19,7 @@ export type IQuestionDoc = Document & IQuestion;
 const QuestionSchema = new Schema<IQuestion>(
   {
     title: { type: String, required: true },
+    description: { type: String, required: false },
     content: { type: String, required: true },
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     views: { type: Number, default: 0 },
@@ -29,6 +31,6 @@ const QuestionSchema = new Schema<IQuestion>(
   { timestamps: true },
 );
 
-const Question = models?.Account || model<IQuestion>('Account', QuestionSchema);
+const Question = models?.Question || model<IQuestion>('Question', QuestionSchema);
 
 export default Question;

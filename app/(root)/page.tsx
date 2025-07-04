@@ -1,10 +1,12 @@
 import Link from 'next/link';
 
 import { QuestionCard } from '@/components/cards/question-card';
+import { DataRenderer } from '@/components/data-redenderer';
 import { HomeFilter } from '@/components/filters/home-filter';
 import { LocalSearch } from '@/components/search/local-search';
 import { Button } from '@/components/ui/button';
 import ROUTES from '@/constants/routes';
+import { EMPTY_QUESTIONS } from '@/constants/states';
 import { getQuestions } from '@/lib/actions/question.action';
 
 export default async function Home({ searchParams }: RouteParams) {
@@ -36,26 +38,25 @@ export default async function Home({ searchParams }: RouteParams) {
       </section>
       <HomeFilter />
 
-      {success
-        ? (
-            <div className="mt-10 flex w-full flex-col gap-6">
-              {questions && questions.length > 0
-                ? questions.map(question => (
-                    <QuestionCard key={question._id} question={question} />
-                  ))
-                : (
-                    <div className="flex flex-col items-center justify-center">
-                      <p className="text-dark200_light800">No questions found</p>
-                    </div>
-                  )}
-            </div>
-
-          )
-        : (
-            <div className="flex flex-col items-center justify-center">
-              <p className="text-dark200_light800">{error?.message || 'Something went wrong'}</p>
-            </div>
-          )}
+      <DataRenderer
+        success={success}
+        data={questions}
+        error={error}
+        emptyState={EMPTY_QUESTIONS}
+        render={() => (
+          <div className="mt-10 flex w-full flex-col gap-6">
+            {questions && questions.length > 0
+              ? questions.map(question => (
+                  <QuestionCard key={question._id} question={question} />
+                ))
+              : (
+                  <div className="flex flex-col items-center justify-center">
+                    <p className="text-dark200_light800">No questions found</p>
+                  </div>
+                )}
+          </div>
+        )}
+      />
 
     </>
   );

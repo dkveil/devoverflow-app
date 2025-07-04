@@ -102,38 +102,49 @@ export async function updateQuestion(params: UpdateQuestionParams): Promise<Acti
 
     await question.save({ session });
 
-    const tagsToAdd = tags.filter(tag => !question.tags.some((t: ITagDoc) => t.name.toLowerCase() === tag.toLowerCase()));
-    const tagsToRemove = question.tags.filter((tag: ITagDoc) => !tags.some((t: string) => t.toLowerCase() === tag.name.toLowerCase()));
+    const currentTagNames = question.tags.map((tag: ITagDoc) => tag.name.toLowerCase());
+    const newTagNames = tags.map(tag => tag.toLowerCase());
 
-    const newTagDocuments = [];
-
-    if (tagsToAdd.length > 0) {
-      for (const tag of tagsToAdd) {
-        const existingTag = await Tag.findOneAndUpdate({ name: { $regex: new RegExp(`^${tag}$`, 'i') } }, { $setOnInsert: { name: tag }, $inc: { questions: 1 } }, { new: true, upsert: true, session });
-
-        if (existingTag) {
-          newTagDocuments.push({
-            tag: existingTag._id,
-            question: questionId,
-          });
-
-          question.tags.push(existingTag._id);
-        }
-      }
-    }
+    const tagsToAdd = tags.filter(tag => !currentTagNames.includes(tag.toLowerCase()));
+    const tagsToRemove = question.tags.filter((tag: ITagDoc) => !newTagNames.includes(tag.name.toLowerCase()));
 
     if (tagsToRemove.length > 0) {
       const tagIds = tagsToRemove.map((tag: ITagDoc) => tag._id);
 
-      await Tag.updateMany({ _id: { $in: tagIds } }, { $inc: { question: -1 } }, { session });
-
+      await Tag.updateMany({ _id: { $in: tagIds } }, { $inc: { questions: -1 } }, { session });
       await TagQuestion.deleteMany({ tag: { $in: tagIds }, question: questionId }, { session });
 
-      question.tags = question.tags.filter((tag: ITagDoc) => !tagsToRemove.includes(tag));
+      question.tags = question.tags.filter(
+        (tag: mongoose.Types.ObjectId) =>
+          !tagIds.some((id: mongoose.Types.ObjectId) =>
+            id.equals(tag._id),
+          ),
+      );
     }
 
-    if (newTagDocuments.length > 0) {
+    // Dodaj nowe tagi
+    if (tagsToAdd.length > 0) {
+      const newTagDocuments = [];
+      const newTagIds = [];
+
+      for (const tag of tagsToAdd) {
+        const existingTag = await Tag.findOneAndUpdate(
+          { name: { $regex: new RegExp(`^${tag}$`, 'i') } },
+          { $setOnInsert: { name: tag }, $inc: { questions: 1 } },
+          { new: true, upsert: true, session },
+        );
+
+        newTagDocuments.push({
+          tag: existingTag._id,
+          question: questionId,
+        });
+
+        newTagIds.push(existingTag._id);
+      }
+
       await TagQuestion.insertMany(newTagDocuments, { session });
+
+      question.tags.push(...newTagIds);
     }
 
     await question.save({ session });

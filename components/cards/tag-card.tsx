@@ -52,12 +52,16 @@ export function TagCard(props: Props) {
   if (compact) {
     return isButton
       ? (
-          <button onClick={handleClick} className="flex justify-between gap-2">
+          <button
+            type="button"
+            onClick={handleClick}
+            className="flex justify-between gap-2"
+          >
             {Content}
           </button>
         )
       : (
-          <Link href={ROUTES.TAGS(_id)} className="flex justify-between gap-2">
+          <Link href={ROUTES.TAG_DETAILS(_id)} className="flex justify-between gap-2">
             {Content}
           </Link>
         );

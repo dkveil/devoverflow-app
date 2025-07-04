@@ -2,13 +2,15 @@
 
 import mongoose from 'mongoose';
 
+import type { ITagDoc } from '@/database/tag.model';
+
 import Question from '@/database/question.model';
 import TagQuestion from '@/database/tag-question.model';
 import Tag from '@/database/tag.model';
 
 import action from '../handlers/action';
 import { handleError } from '../handlers/error';
-import { AskQuestionSchema } from '../validations';
+import { AskQuestionSchema, GetQuestionSchema, UpdateQuestionSchema } from '../validations';
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<Question>> {
   const validationResult = await action({
@@ -56,5 +58,112 @@ export async function createQuestion(params: CreateQuestionParams): Promise<Acti
     return handleError(error) as ErrorResponse;
   } finally {
     await session.endSession();
+  }
+}
+
+export async function updateQuestion(params: UpdateQuestionParams): Promise<ActionResponse<Question>> {
+  const validationResult = await action({
+    params,
+    schema: UpdateQuestionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId, title, content, tags } = validationResult.params!;
+  const userId = validationResult?.session?.user?.id;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const question = await Question.findById(questionId).populate('tags');
+
+    if (!question) {
+      throw new Error('Question not found');
+    }
+
+    if (question.author.toString() !== userId) {
+      throw new Error('You are not authorized to update this question');
+    }
+
+    if (question.title !== title) question.title = title;
+    if (question.content !== content) question.content = content;
+
+    await question.save({ session });
+
+    const tagsToAdd = tags.filter(tag => !question.tags.includes(tag.toLowerCase()));
+    const tagsToRemove = question.tags.filter((tag: ITagDoc) => !tags.includes(tag.name));
+
+    const newTagDocuments = [];
+
+    if (tagsToAdd.length > 0) {
+      for (const tag of tagsToAdd) {
+        const existingTag = await Tag.findOneAndUpdate({ name: { $regex: new RegExp(`^${tag}$`, 'i') } }, { $setOnInsert: { name: tag }, $inc: { questions: 1 } }, { new: true, upsert: true, session });
+
+        if (existingTag) {
+          newTagDocuments.push({
+            tag: existingTag._id,
+            question: questionId,
+          });
+
+          question.tags.push(existingTag._id);
+        }
+      }
+    }
+
+    if (tagsToRemove.length > 0) {
+      const tagIds = tagsToRemove.map((tag: ITagDoc) => tag._id);
+
+      await Tag.updateMany({ _id: { $in: tagIds } }, { $inc: { question: -1 } }, { session });
+
+      await TagQuestion.deleteMany({ tag: { $in: tagIds }, question: questionId }, { session });
+
+      question.tags = question.tags.filter((tag: ITagDoc) => !tagsToRemove.includes(tag));
+    }
+
+    if (newTagDocuments.length > 0) {
+      await TagQuestion.insertMany(newTagDocuments, { session });
+    }
+
+    await question.save({ session });
+    await session.commitTransaction();
+
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
+  } catch (error) {
+    await session.abortTransaction();
+    return handleError(error) as ErrorResponse;
+  } finally {
+    await session.endSession();
+  }
+}
+
+export async function getQuestion(
+  params: GetQuestionParams,
+): Promise<ActionResponse<Question>> {
+  const validationResult = await action({
+    params,
+    schema: GetQuestionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId } = validationResult.params!;
+
+  try {
+    const question = await Question.findById(questionId).populate('tags');
+
+    if (!question) {
+      throw new Error('Question not found');
+    }
+
+    return { success: true, data: JSON.parse(JSON.stringify(question)) };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
   }
 }

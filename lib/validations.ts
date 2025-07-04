@@ -68,6 +68,19 @@ export const AskQuestionSchema = z.object({
     .max(3, { message: 'Cannot add more than 3 tags.' }),
 });
 
+export const UpdateQuestionSchema = AskQuestionSchema.extend({
+  questionId: z
+    .string()
+    .min(1, { message: 'Question ID is required.' })
+    .regex(/^[0-9a-f]{24}$/i, {
+      message: 'Question ID must be a valid MongoDB ObjectId.',
+    }),
+});
+
+export const GetQuestionSchema = z.object({
+  questionId: z.string().min(1, { message: 'Question ID is required.' }),
+});
+
 export const UserSchema = z.object({
   name: z
     .string()

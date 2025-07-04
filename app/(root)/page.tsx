@@ -12,6 +12,7 @@ const questions: Question[] = [
     _id: '1',
     title: 'How to learn React?',
     description: 'I want to learn React, can anyone help me?',
+    content: 'I want to learn React, can anyone help me?',
     tags: [
       { _id: '1', name: 'React' },
       { _id: '2', name: 'JavaScript' },
@@ -26,6 +27,7 @@ const questions: Question[] = [
     _id: '2',
     title: 'How to learn JavaScript?',
     description: 'I want to learn JavaScript, can anyone help me?',
+    content: 'I want to learn JavaScript, can anyone help me?',
     tags: [
       { _id: '1', name: 'JavaScript' },
       { _id: '2', name: 'JavaScript' },

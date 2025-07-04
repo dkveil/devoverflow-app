@@ -21,3 +21,14 @@ type CreateQuestionParams = {
   content: string;
   tags: string[];
 };
+
+type UpdateQuestionParams = {
+  questionId: string;
+  title: string;
+  content: string;
+  tags: string[];
+};
+
+type GetQuestionParams = {
+  questionId: string;
+};

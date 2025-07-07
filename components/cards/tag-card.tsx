@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import ROUTES from '@/constants/routes';
-import { getDeviconIcon } from '@/lib/utils';
+import { getDeviconIcon, getTagDescription } from '@/lib/utils';
 
 import { Badge } from '../ui/badge';
 
@@ -66,4 +66,28 @@ export function TagCard(props: Props) {
           </Link>
         );
   }
+
+  const description = getTagDescription(name);
+
+  return (
+    <Link href={ROUTES.TAG_DETAILS(_id)} className="background-light800_darkgradient flex w-full flex-col gap-4 rounded-lg p-6 hover:shadow-lg transition-all">
+      <article className="w-full">
+        <div className="flex items-center gap-3">
+          <i className={`${iconClass} text-2xl text-primary-500`}></i>
+          <h3 className="h3-bold text-dark200_light800 uppercase">{name}</h3>
+        </div>
+
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-dark200_light800 body-regular line-clamp-2">{description}</p>
+
+          {questions !== undefined && (
+            <div className="flex items-center gap-2 rounded-full bg-light-700 px-5 py-2 dark:bg-dark-400">
+              <span className="text-dark400_light700 small-medium">{questions}</span>
+              <span className="text-dark400_light700 small-regular">questions</span>
+            </div>
+          )}
+        </div>
+      </article>
+    </Link>
+  );
 };

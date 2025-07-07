@@ -62,6 +62,19 @@ declare global {
     filter?: string;
     sortBy?: string;
   };
+
+  type GetTagQuestionsParams = PaginatedSearchParams & {
+    tagId: string;
+  };
+
+  type Pagination = {
+    page: number;
+    pageSize: number;
+    totalPages: number;
+    total: number;
+    isPrev: boolean;
+    isNext: boolean;
+  };
 }
 
 export {};

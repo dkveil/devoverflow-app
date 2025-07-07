@@ -13,10 +13,11 @@ type Props = {
   imgSrc: string;
   placeholder: string;
   otherClasses?: string;
+  iconPosition?: 'left' | 'right';
 };
 
 export function LocalSearch(props: Props) {
-  const { imgSrc, placeholder, otherClasses } = props;
+  const { imgSrc, placeholder, otherClasses, iconPosition = 'left' } = props;
 
   const [inputValue, setInputValue] = useState('');
   const [_, setSearchQuery] = useQueryState('query', {
@@ -34,13 +35,15 @@ export function LocalSearch(props: Props) {
     <div
       className={`background-light800_darkgradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] px-4 ${otherClasses}`}
     >
-      <Image
-        src={imgSrc}
-        width={24}
-        height={24}
-        alt="search"
-        className="cursor-pointer"
-      />
+      {iconPosition === 'left' && (
+        <Image
+          src={imgSrc}
+          width={24}
+          height={24}
+          alt="search"
+          className="cursor-pointer"
+        />
+      )}
       <Input
         type="text"
         placeholder={placeholder}
@@ -50,6 +53,15 @@ export function LocalSearch(props: Props) {
         value={inputValue}
         className="dark:bg-background-light800_darkgradient paragraph-regular no-focus placeholder text-dark400_light700 border-none shadow-none outline-none"
       />
+      {iconPosition === 'right' && (
+        <Image
+          src={imgSrc}
+          width={24}
+          height={24}
+          alt="search"
+          className="cursor-pointer"
+        />
+      )}
     </div>
   );
 };

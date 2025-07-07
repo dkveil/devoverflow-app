@@ -189,11 +189,7 @@ export async function getQuestion(
 
 type PaginatedQuestions = {
   questions: Question[];
-  page: number;
-  totalPages: number;
-  total: number;
-  isPrev: boolean;
-  isNext: boolean;
+  pagination: Pagination;
 };
 
 export async function getQuestions(
@@ -215,7 +211,16 @@ export async function getQuestions(
   const filterQuery: FilterQuery<Question> = {};
 
   if (filter === 'recommended') {
-    return { success: true, data: { questions: [], page, totalPages: 0, total: 0, isPrev: false, isNext: false } };
+    const pagination: Pagination = {
+      page,
+      pageSize,
+      totalPages: 0,
+      total: 0,
+      isPrev: false,
+      isNext: false,
+    };
+
+    return { success: true, data: { questions: [], pagination } };
   }
 
   if (query) {
@@ -272,7 +277,16 @@ export async function getQuestions(
     const isPrev = page > 1;
     const isNext = page < totalPages;
 
-    return { success: true, data: { questions: JSON.parse(JSON.stringify(questions)), page, totalPages, total, isPrev, isNext } };
+    const pagination: Pagination = {
+      page,
+      pageSize,
+      totalPages,
+      total,
+      isPrev,
+      isNext,
+    };
+
+    return { success: true, data: { questions: JSON.parse(JSON.stringify(questions)), pagination } };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

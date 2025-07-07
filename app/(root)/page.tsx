@@ -9,6 +9,12 @@ import ROUTES from '@/constants/routes';
 import { EMPTY_QUESTIONS } from '@/constants/states';
 import { getQuestions } from '@/lib/actions/question.action';
 
+const filters = [
+  { name: 'Newest', value: 'newest' },
+  { name: 'Oldest', value: 'oldest' },
+  { name: 'Popular', value: 'popular' },
+];
+
 export default async function Home({ searchParams }: RouteParams) {
   const { page = 1, pageSize = 10, query = '', filter = '', sortBy = 'newest' } = await searchParams;
 
@@ -36,7 +42,7 @@ export default async function Home({ searchParams }: RouteParams) {
           otherClasses="flex-1"
         />
       </section>
-      <HomeFilter />
+      <HomeFilter filters={filters} />
 
       <DataRenderer
         success={success}

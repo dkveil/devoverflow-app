@@ -186,3 +186,7 @@ export const OAuthSignInSchema = z.object({
     image: z.string().url({ message: 'Please provide a valid image URL.' }).optional(),
   }),
 });
+
+export const GetTagQuestionsSchema = PaginatedSearchParamsSchema.extend({
+  tagId: z.string().min(1, { message: 'Tag ID is required.' }),
+});

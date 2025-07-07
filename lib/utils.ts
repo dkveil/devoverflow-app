@@ -3,7 +3,7 @@ import type { ClassValue } from 'clsx';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-import { techMap } from '@/constants/tech-map';
+import { techDescriptions, techMap } from '@/constants/tech-map';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,6 +19,12 @@ export function getDeviconIcon(name: string) {
   }
 
   return techIconClass;
+}
+
+export function getTagDescription(name: string) {
+  const normalizedTechName = name.toLowerCase().replace(/ /g, '-');
+  const techDescription = techDescriptions[normalizedTechName];
+  return techDescription;
 }
 
 export function getTimeStamp(date: Date) {

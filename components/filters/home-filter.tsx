@@ -6,13 +6,21 @@ import { cn } from '@/lib/utils';
 
 import { Button } from '../ui/button';
 
-const filters = [
-  { name: 'React', value: 'react' },
-  { name: 'JavaScript', value: 'javascript' },
+type Props = {
+  filters?: { name: string; value: string }[];
+  filterParam?: string;
+};
+
+const defaultFilters = [
+  { name: 'Newest', value: 'newest' },
+  { name: 'Oldest', value: 'oldest' },
+  { name: 'Popular', value: 'popular' },
 ];
 
-export function HomeFilter() {
-  const [active, setActive] = useQueryState('filter', {
+export function HomeFilter(props: Props) {
+  const { filters = defaultFilters, filterParam = 'filter' } = props;
+
+  const [active, setActive] = useQueryState(filterParam, {
     defaultValue: '',
     parse: value => value as string,
     shallow: false,

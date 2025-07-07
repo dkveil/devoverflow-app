@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { after } from 'next/server';
 import React from 'react';
 
 import { TagCard } from '@/components/cards/tag-card';
@@ -7,12 +8,19 @@ import { Preview } from '@/components/editor/preview';
 import { Metric } from '@/components/metric';
 import { UserAvatar } from '@/components/user-avatar';
 import ROUTES from '@/constants/routes';
-import { getQuestion } from '@/lib/actions/question.action';
+import { getQuestion, incrementViews } from '@/lib/actions/question.action';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 
 export default async function QuestionDetails({ params }: RouteParams) {
   const { id: questionId } = await params;
-  const { success, data: question } = await getQuestion({ questionId });
+
+  const [{ success, data: question }] = await Promise.all([
+    await getQuestion({ questionId }),
+  ]);
+
+  after(async () => {
+    await incrementViews({ questionId });
+  });
 
   if (!success || !question) {
     return notFound();

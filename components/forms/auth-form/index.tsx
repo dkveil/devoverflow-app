@@ -31,7 +31,7 @@ import ROUTES from '@/constants/routes';
 type AuthFormProps<T extends FieldValues> = {
   schema: ZodType<T>;
   defaultValues: T;
-  onSubmit: (data: T) => Promise<{ success: boolean }>;
+  onSubmit: (data: T) => Promise<ActionResponse>;
   formType: 'SIGN_IN' | 'SIGN_UP';
 };
 
@@ -44,7 +44,7 @@ const AuthForm = <T extends FieldValues>({
   const router = useRouter();
 
   const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(schema as any),
     defaultValues: defaultValues as DefaultValues<T>,
   });
 

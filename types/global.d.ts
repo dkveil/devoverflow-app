@@ -67,6 +67,10 @@ declare global {
     tagId: string;
   };
 
+  type IncrementViewsParams = {
+    questionId: string;
+  };
+
   type Pagination = {
     page: number;
     pageSize: number;

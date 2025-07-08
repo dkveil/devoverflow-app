@@ -79,6 +79,11 @@ declare global {
     isPrev: boolean;
     isNext: boolean;
   };
+
+  type CreateAnswerParams = {
+    content: string;
+    questionId: string;
+  };
 }
 
 export {};

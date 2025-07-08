@@ -12,11 +12,11 @@ export function Preview({ content }: { content: string }) {
   const formattedContent = content.replace(/\\/g, '').replace(/&#x20;/g, '');
 
   return (
-    <section className="markdown prose grid break-words">
+    <section className="markdown prose grid break-words" style={{ wordWrap: 'anywhere' as any }}>
       <MDXRemote
         source={formattedContent}
         components={{
-          pre: props => (
+          pre: (props: any) => (
             <Code {...props} lineNumbers className="shadow-light-200 dark:shadow-dark-200" />
           ),
         }}

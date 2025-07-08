@@ -26,6 +26,13 @@ declare global {
     createdAt: Date;
   };
 
+  type Answer = {
+    _id: string;
+    content: string;
+    author: Author;
+    createdAt: Date;
+  };
+
   type ActionResponse<T = null> = {
     success: boolean;
     data?: T;
@@ -82,6 +89,10 @@ declare global {
 
   type CreateAnswerParams = {
     content: string;
+    questionId: string;
+  };
+
+  type GetQuestionAnswersParams = PaginatedSearchParams & {
     questionId: string;
   };
 }

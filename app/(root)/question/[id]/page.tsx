@@ -3,20 +3,23 @@ import { notFound } from 'next/navigation';
 import { after } from 'next/server';
 import React from 'react';
 
+import { AllAnswers } from '@/components/answers/all-answers';
 import { TagCard } from '@/components/cards/tag-card';
 import { Preview } from '@/components/editor/preview';
 import { AnswerForm } from '@/components/forms/answers-form';
 import { Metric } from '@/components/metric';
 import { UserAvatar } from '@/components/user-avatar';
 import ROUTES from '@/constants/routes';
+import { getQuestionAnswers } from '@/lib/actions/answer.action';
 import { getQuestion, incrementViews } from '@/lib/actions/question.action';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 
 export default async function QuestionDetails({ params }: RouteParams) {
   const { id: questionId } = await params;
 
-  const [{ success, data: question }] = await Promise.all([
-    await getQuestion({ questionId }),
+  const [{ success, data: question }, { success: answersLoadedSuccess, data: answersResult }] = await Promise.all([
+    getQuestion({ questionId }),
+    getQuestionAnswers({ questionId }),
   ]);
 
   after(async () => {
@@ -94,6 +97,10 @@ export default async function QuestionDetails({ params }: RouteParams) {
           />
         ))}
       </div>
+
+      <section className="my-5">
+        <AllAnswers success={answersLoadedSuccess} data={answersResult} />
+      </section>
 
       <section className="my-5">
         <AnswerForm questionId={questionId} />

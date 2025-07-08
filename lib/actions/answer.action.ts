@@ -9,7 +9,7 @@ import { Answer, Question } from '@/database';
 import action from '../handlers/action';
 import { handleError } from '../handlers/error';
 import { NotFoundError } from '../http-errors';
-import { CreateAnswerSchema } from '../validations';
+import { CreateAnswerSchema, GetQuestionAnswersSchema } from '../validations';
 
 export async function createAnswer(params: CreateAnswerParams): Promise<ActionResponse<IAnswer>> {
   const validationResult = await action({
@@ -52,5 +52,61 @@ export async function createAnswer(params: CreateAnswerParams): Promise<ActionRe
     return handleError(error) as ErrorResponse;
   } finally {
     await session.endSession();
+  }
+}
+
+export type GetQuestionAnswersResponse = {
+  answers: Answer[];
+  pagination: Pagination;
+};
+
+export async function getQuestionAnswers(params: GetQuestionAnswersParams): Promise<ActionResponse<GetQuestionAnswersResponse>> {
+  const validationResult = await action({
+    params,
+    schema: GetQuestionAnswersSchema,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { questionId, page = 1, pageSize = 10, sortBy = 'newest' } = validationResult.params!;
+
+  const skip = (page - 1) * pageSize;
+  const limit = pageSize;
+
+  let sortOptions = {};
+
+  switch (sortBy) {
+    case 'newest':
+      sortOptions = { createdAt: -1 };
+      break;
+    case 'oldest':
+      sortOptions = { createdAt: 1 };
+      break;
+    case 'popular':
+      sortOptions = { upvotes: -1 };
+      break;
+    default:
+      sortOptions = { createdAt: -1 };
+  }
+
+  try {
+    const totalAnswers = await Answer.countDocuments({ question: questionId });
+
+    const answers = await Answer.find({ question: questionId }).populate('author', 'name image').sort(sortOptions).skip(skip).limit(limit).lean();
+
+    const pagination = {
+      page,
+      pageSize,
+      totalPages: Math.ceil(totalAnswers / pageSize),
+      total: totalAnswers,
+      isPrev: page > 1,
+      isNext: page < Math.ceil(totalAnswers / pageSize),
+    };
+
+    return { success: true, data: { answers: JSON.parse(JSON.stringify(answers)), pagination } };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
   }
 }

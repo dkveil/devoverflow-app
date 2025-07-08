@@ -7,7 +7,7 @@ import { Button } from './ui/button';
 type State = {
   title: string;
   message: string;
-  button: {
+  button?: {
     text: string;
     link: string;
   };
@@ -32,12 +32,14 @@ function StateSkeleton(props: State) {
     <div className="flex min-h-[200px] w-full flex-col items-center justify-center gap-4">
       <h2 className="h2-bold text-dark200_light800">{title}</h2>
       <p className="text-dark200_light800 body-regular">{message}</p>
-      <Button
-        className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900"
-        asChild
-      >
-        <Link href={button.link}>{button.text}</Link>
-      </Button>
+      {button && (
+        <Button
+          className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900"
+          asChild
+        >
+          <Link href={button.link}>{button.text}</Link>
+        </Button>
+      )}
     </div>
   );
 }

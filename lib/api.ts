@@ -25,4 +25,11 @@ export const api = {
     update: (id: string, accountData: Partial<IAccount>) => fetchHandler(`${API_BASE_URL}/accounts/${id}`, { method: 'PUT', body: JSON.stringify(accountData) }),
     delete: (id: string) => fetchHandler(`${API_BASE_URL}/accounts/${id}`, { method: 'DELETE' }),
   },
+  ai: {
+    getAnswer: (question: string, content: string, userAnswer: string): Promise<AIAnswerResponse> =>
+      fetchHandler<AIAnswerData>(`${API_BASE_URL}/ai/answers`, {
+        method: 'POST',
+        body: JSON.stringify({ question, content, userAnswer } satisfies AIAnswerRequest),
+      }),
+  },
 };

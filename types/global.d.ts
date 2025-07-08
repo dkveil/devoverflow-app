@@ -95,6 +95,22 @@ declare global {
   type GetQuestionAnswersParams = PaginatedSearchParams & {
     questionId: string;
   };
+
+  type AIAnswerData = {
+    answer: string;
+  };
+
+  type AIAnswerRequest = {
+    question: string;
+    content: string;
+    userAnswer: string;
+  };
+
+  type AIAnswerResponse = ActionResponse<AIAnswerData>;
+
+  type AIAnswerSuccessResponse = SuccessResponse<AIAnswerData>;
+
+  type AIAnswerErrorResponse = ErrorResponse;
 }
 
 export {};

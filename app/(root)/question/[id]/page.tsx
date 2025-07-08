@@ -103,7 +103,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
       </section>
 
       <section className="my-5">
-        <AnswerForm questionId={questionId} />
+        <AnswerForm questionId={questionId} questionTitle={title} questionContent={content} />
       </section>
     </>
   );

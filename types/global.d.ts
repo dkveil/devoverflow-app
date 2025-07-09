@@ -21,6 +21,7 @@ declare global {
     tags: Tag[];
     author: Author;
     upvotes: number;
+    downvotes: number;
     answers: number;
     views: number;
     createdAt: Date;
@@ -30,6 +31,8 @@ declare global {
     _id: string;
     content: string;
     author: Author;
+    upvotes: number;
+    downvotes: number;
     createdAt: Date;
   };
 

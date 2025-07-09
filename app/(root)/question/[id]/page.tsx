@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { after } from 'next/server';
-import React from 'react';
+import React, { Suspense } from 'react';
 
 import { AllAnswers } from '@/components/answers/all-answers';
 import { TagCard } from '@/components/cards/tag-card';
@@ -9,9 +9,11 @@ import { Preview } from '@/components/editor/preview';
 import { AnswerForm } from '@/components/forms/answers-form';
 import { Metric } from '@/components/metric';
 import { UserAvatar } from '@/components/user-avatar';
+import { Votes, VotesSkeleton } from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getQuestionAnswers } from '@/lib/actions/answer.action';
 import { getQuestion, incrementViews } from '@/lib/actions/question.action';
+import { hasVoted } from '@/lib/actions/vote.action';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
 
 export default async function QuestionDetails({ params }: RouteParams) {
@@ -22,6 +24,8 @@ export default async function QuestionDetails({ params }: RouteParams) {
     getQuestionAnswers({ questionId }),
   ]);
 
+  const hasVotedPromise = hasVoted({ targetId: questionId, targetType: 'question' });
+
   after(async () => {
     await incrementViews({ questionId });
   });
@@ -30,7 +34,7 @@ export default async function QuestionDetails({ params }: RouteParams) {
     return notFound();
   }
 
-  const { author, createdAt, answers, views, tags, content, title } = question;
+  const { author, createdAt, answers, views, tags, content, title, upvotes, downvotes } = question;
 
   return (
     <>
@@ -52,7 +56,15 @@ export default async function QuestionDetails({ params }: RouteParams) {
           </div>
 
           <div className="flex justify-end">
-            <p>Votes</p>
+            <Suspense fallback={<VotesSkeleton />}>
+              <Votes
+                upvotes={upvotes}
+                downvotes={downvotes}
+                targetId={questionId}
+                targetType="question"
+                hasVotedPromise={hasVotedPromise}
+              />
+            </Suspense>
           </div>
         </div>
 

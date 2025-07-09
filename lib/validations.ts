@@ -214,3 +214,18 @@ export const AIAnswerSchema = z.object({
   content: z.string().min(1, { message: 'Content is required.' }),
   userAnswer: z.string().optional(),
 });
+
+export const CreateVoteSchema = z.object({
+  targetId: z.string().min(1, { message: 'Target ID is required.' }),
+  targetType: z.enum(['question', 'answer'], { message: 'Target type is required.' }),
+  voteType: z.enum(['upvote', 'downvote'], { message: 'Vote type is required.' }),
+});
+
+export const UpdateVoteSchema = CreateVoteSchema.extend({
+  change: z.number().int().min(-1, { message: 'Change type is required.' }).max(1, { message: 'Change type is required.' }),
+});
+
+export const HasVotedSchema = z.object({
+  targetId: z.string().min(1, { message: 'Target ID is required.' }),
+  targetType: z.enum(['question', 'answer'], { message: 'Target type is required.' }),
+});

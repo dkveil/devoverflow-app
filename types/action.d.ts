@@ -34,3 +34,20 @@ type UpdateQuestionParams = {
 type GetQuestionParams = {
   questionId: string;
 };
+
+type CreateVoteParams = {
+  targetId: string;
+  targetType: 'question' | 'answer';
+  voteType: 'upvote' | 'downvote';
+};
+
+type UpdateVoteCountParams = CreateVoteParams & {
+  change: 1 | -1;
+};
+
+type HasVotedParams = Pick<CreateVoteParams, 'targetId' | 'targetType'>;
+
+type HasVotedResponse = {
+  hasUpvoted: boolean;
+  hasDownvoted: boolean;
+};

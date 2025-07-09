@@ -1,15 +1,23 @@
 import Link from 'next/link';
+import { Suspense } from 'react';
 
 import { ROUTES } from '@/constants';
+import { hasVoted } from '@/lib/actions/vote.action';
 import { getTimeStamp } from '@/lib/utils';
 
 import { Preview } from '../editor/preview';
 import { UserAvatar } from '../user-avatar';
+import { Votes, VotesSkeleton } from '../votes/votes';
 
 type Props = Answer;
 
 export function AnswerCard(props: Props) {
-  const { _id, content, author, createdAt } = props;
+  const { _id, content, author, createdAt, upvotes, downvotes } = props;
+
+  const hasVotedPromise = hasVoted({
+    targetId: _id,
+    targetType: 'answer',
+  });
 
   return (
     <article className="light-border border-b py-10">
@@ -39,7 +47,11 @@ export function AnswerCard(props: Props) {
             </p>
           </Link>
         </div>
-        <div className="flex justify-end">Votes</div>
+        <div className="flex justify-end">
+          <Suspense fallback={<VotesSkeleton />}>
+            <Votes upvotes={upvotes} downvotes={downvotes} targetId={_id} targetType="answer" hasVotedPromise={hasVotedPromise} />
+          </Suspense>
+        </div>
       </div>
 
       <Preview content={content} />

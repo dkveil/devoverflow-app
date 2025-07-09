@@ -1,3 +1,5 @@
+'use server';
+
 import type { ClientSession } from 'mongoose';
 
 import mongoose from 'mongoose';

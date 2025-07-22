@@ -229,3 +229,5 @@ export const HasVotedSchema = z.object({
   targetId: z.string().min(1, { message: 'Target ID is required.' }),
   targetType: z.enum(['question', 'answer'], { message: 'Target type is required.' }),
 });
+
+export const GetAllUsersSchema = PaginatedSearchParamsSchema;

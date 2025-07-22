@@ -114,6 +114,24 @@ declare global {
   type AIAnswerSuccessResponse = SuccessResponse<AIAnswerData>;
 
   type AIAnswerErrorResponse = ErrorResponse;
+
+  type User = {
+    _id: string;
+    name: string;
+    username: string;
+    email: string;
+    image: string;
+    bio: string;
+    location: string;
+    portfolio: string;
+    reputation: number;
+    socialLinks: {
+      github: string;
+      twitter: string;
+      linkedin: string;
+      website: string;
+    };
+  };
 }
 
 export {};

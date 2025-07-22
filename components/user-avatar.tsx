@@ -15,9 +15,10 @@ type Props = {
   width?: number;
   height?: number;
   fallbackClassName?: string;
+  fill?: boolean;
 };
 
-export function UserAvatar({ id, name, image, className = 'h-9 w-9', width = 36, height = 36, fallbackClassName }: Props) {
+export function UserAvatar({ id, name, image, className = 'h-9 w-9', width = 36, height = 36, fallbackClassName, fill = false }: Props) {
   const initials = name
     .split(' ')
     .map((word: string) => word[0])
@@ -27,15 +28,16 @@ export function UserAvatar({ id, name, image, className = 'h-9 w-9', width = 36,
 
   return (
     <Link href={ROUTES.PROFILE(id)}>
-      <Avatar className={className}>
+      <Avatar className={cn('relative', className)}>
         {image
           ? (
               <Image
                 src={image}
                 alt={name}
                 className="object-cover"
-                width={width}
-                height={height}
+                width={!fill ? width : undefined}
+                height={!fill ? height : undefined}
+                fill={fill}
                 quality={100}
               />
             )

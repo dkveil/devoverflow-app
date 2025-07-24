@@ -1,8 +1,11 @@
 import { QuestionCard } from '@/components/cards/question-card';
 import { DataRenderer } from '@/components/data-redenderer';
+import { CommonFilter } from '@/components/filters/common-filter';
 import { HomeFilter } from '@/components/filters/home-filter';
+import { Pagination } from '@/components/pagination';
 import { LocalSearch } from '@/components/search/local-search';
 import { ROUTES } from '@/constants';
+import { collectionFilters } from '@/constants/filters';
 import { EMPTY_QUESTIONS } from '@/constants/states';
 import { getUserCollection } from '@/lib/actions/collection.action';
 
@@ -16,18 +19,24 @@ export default async function Collections({ searchParams }: RouteParams) {
     sortBy,
   });
 
-  const { collection } = data || {};
+  const { collection, pagination } = data || {};
 
   return (
     <>
-      <h1 className="h1-bold text-dark100_light900 text-3xl">Tags</h1>
+      <h1 className="h1-bold text-dark100_light900 text-3xl">Collections</h1>
 
-      <section className="mt-11">
+      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           route={ROUTES.COLLECTIONS}
           imgSrc="/icons/search.svg"
           placeholder="Search collections..."
           otherClasses="flex-1"
+        />
+
+        <CommonFilter
+          filters={collectionFilters}
+          filterParam="sortBy"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </section>
 
@@ -48,6 +57,12 @@ export default async function Collections({ searchParams }: RouteParams) {
           </div>
         )}
       />
+
+      {pagination && (
+        <div className="mt-10">
+          <Pagination {...pagination} />
+        </div>
+      )}
     </>
   );
 }

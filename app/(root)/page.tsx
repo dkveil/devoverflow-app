@@ -2,9 +2,12 @@ import Link from 'next/link';
 
 import { QuestionCard } from '@/components/cards/question-card';
 import { DataRenderer } from '@/components/data-redenderer';
+import { CommonFilter } from '@/components/filters/common-filter';
 import { HomeFilter } from '@/components/filters/home-filter';
+import { Pagination } from '@/components/pagination';
 import { LocalSearch } from '@/components/search/local-search';
 import { Button } from '@/components/ui/button';
+import { homeFilters } from '@/constants';
 import ROUTES from '@/constants/routes';
 import { EMPTY_QUESTIONS } from '@/constants/states';
 import { getQuestions } from '@/lib/actions/question.action';
@@ -20,7 +23,7 @@ export default async function Home({ searchParams }: RouteParams) {
 
   const { success, data, error } = await getQuestions({ page: Number(page), pageSize: Number(pageSize), query, filter, sortBy, excludeContent: true });
 
-  const { questions } = data || {};
+  const { questions, pagination } = data || {};
 
   return (
     <>
@@ -34,12 +37,18 @@ export default async function Home({ searchParams }: RouteParams) {
           <Link href={ROUTES.ASK_QUESTION}>Ask a Question</Link>
         </Button>
       </section>
-      <section className="mt-11">
+      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           route="/"
           imgSrc="/icons/search.svg"
           placeholder="Search questions..."
           otherClasses="flex-1"
+        />
+
+        <CommonFilter
+          filters={homeFilters}
+          filterParam="filter"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </section>
       <HomeFilter filters={filters} />
@@ -63,7 +72,11 @@ export default async function Home({ searchParams }: RouteParams) {
           </div>
         )}
       />
-
+      {pagination && (
+        <div className="mt-10">
+          <Pagination {...pagination} />
+        </div>
+      )}
     </>
   );
 }

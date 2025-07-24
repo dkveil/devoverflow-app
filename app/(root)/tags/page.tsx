@@ -1,8 +1,11 @@
 import { TagCard } from '@/components/cards/tag-card';
 import { DataRenderer } from '@/components/data-redenderer';
+import { CommonFilter } from '@/components/filters/common-filter';
 import { HomeFilter } from '@/components/filters/home-filter';
+import { Pagination } from '@/components/pagination';
 import { LocalSearch } from '@/components/search/local-search';
 import { ROUTES } from '@/constants';
+import { tagFilters } from '@/constants/filters';
 import { EMPTY_TAGS } from '@/constants/states';
 import { getTags } from '@/lib/actions/tag.action';
 
@@ -16,18 +19,24 @@ export default async function Tags({ searchParams }: RouteParams) {
     sortBy,
   });
 
-  const { tags } = data || {};
+  const { tags, pagination } = data || {};
 
   return (
     <>
       <h1 className="h1-bold text-dark100_light900 text-3xl">Tags</h1>
 
-      <section className="mt-11">
+      <section className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearch
           route={ROUTES.TAGS}
           imgSrc="/icons/search.svg"
           placeholder="Search tags..."
           otherClasses="flex-1"
+        />
+
+        <CommonFilter
+          filters={tagFilters}
+          filterParam="sortBy"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </section>
 
@@ -46,6 +55,12 @@ export default async function Tags({ searchParams }: RouteParams) {
           </div>
         )}
       />
+
+      {pagination && (
+        <div className="mt-10">
+          <Pagination {...pagination} />
+        </div>
+      )}
     </>
   );
 }

@@ -1,5 +1,8 @@
 import type { GetQuestionAnswersResponse } from '@/lib/actions/answer.action';
 
+import { CommonFilter } from '@/components/filters/common-filter';
+import { Pagination } from '@/components/pagination';
+import { answerFilters } from '@/constants/filters';
 import { EMPTY_ANSWERS } from '@/constants/states';
 
 import { AnswerCard } from '../cards/answer-card';
@@ -22,7 +25,12 @@ export function AllAnswers({ success, data, error }: Props) {
           {' '}
           {pagination.total === 1 ? 'Answer' : 'Answers'}
         </h3>
-        <p>Filters</p>
+
+        <CommonFilter
+          filters={answerFilters}
+          filterParam="sortBy"
+          otherClasses="min-h-[56px] sm:min-w-[170px]"
+        />
       </div>
       <DataRenderer
         data={answers}
@@ -34,6 +42,12 @@ export function AllAnswers({ success, data, error }: Props) {
             ? answers.map(answer => <AnswerCard key={answer._id} {...answer} />)
             : <AnswerCard {...answers} />}
       />
+
+      {pagination && (
+        <div className="mt-10">
+          <Pagination {...pagination} />
+        </div>
+      )}
     </div>
   );
 }

@@ -8,10 +8,12 @@ import { TagCard } from '@/components/cards/tag-card';
 import { Preview } from '@/components/editor/preview';
 import { AnswerForm } from '@/components/forms/answers-form';
 import { Metric } from '@/components/metric';
+import { SaveQuestions, SaveQuestionsSkeleton } from '@/components/questions/save-questions';
 import { UserAvatar } from '@/components/user-avatar';
 import { Votes, VotesSkeleton } from '@/components/votes/votes';
 import ROUTES from '@/constants/routes';
 import { getQuestionAnswers } from '@/lib/actions/answer.action';
+import { hasSavedQuestion } from '@/lib/actions/collection.action';
 import { getQuestion, incrementViews } from '@/lib/actions/question.action';
 import { hasVoted } from '@/lib/actions/vote.action';
 import { formatNumber, getTimeStamp } from '@/lib/utils';
@@ -19,9 +21,10 @@ import { formatNumber, getTimeStamp } from '@/lib/utils';
 export default async function QuestionDetails({ params }: RouteParams) {
   const { id: questionId } = await params;
 
-  const [{ success, data: question }, { success: answersLoadedSuccess, data: answersResult }] = await Promise.all([
+  const [{ success, data: question }, { success: answersLoadedSuccess, data: answersResult }, { success: savedSuccess, data: savedResult }] = await Promise.all([
     getQuestion({ questionId }),
     getQuestionAnswers({ questionId }),
+    hasSavedQuestion({ questionId }),
   ]);
 
   const hasVotedPromise = hasVoted({ targetId: questionId, targetType: 'question' });
@@ -64,6 +67,10 @@ export default async function QuestionDetails({ params }: RouteParams) {
                 targetType="question"
                 hasVotedPromise={hasVotedPromise}
               />
+            </Suspense>
+
+            <Suspense fallback={<SaveQuestionsSkeleton />}>
+              <SaveQuestions questionId={questionId} hasSaved={(savedSuccess && savedResult?.saved) || false} />
             </Suspense>
           </div>
         </div>

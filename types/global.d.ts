@@ -132,6 +132,12 @@ declare global {
       website: string;
     };
   };
+
+  type Collection = {
+    _id: string;
+    author: string | Author;
+    question: Question;
+  };
 }
 
 export {};

@@ -231,3 +231,7 @@ export const HasVotedSchema = z.object({
 });
 
 export const GetAllUsersSchema = PaginatedSearchParamsSchema;
+
+export const CollectionBaseSchema = z.object({
+  questionId: z.string().min(1, { message: 'Question ID is required.' }),
+});

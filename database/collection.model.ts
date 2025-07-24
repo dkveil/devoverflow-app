@@ -4,14 +4,14 @@ import { model, models, Schema } from 'mongoose';
 
 export type ICollection = {
   author: Types.ObjectId;
-  questions: Types.ObjectId[];
+  question: Types.ObjectId;
 };
 
 export type ICollectionDoc = Document & ICollection;
 
 const CollectionSchema = new Schema<ICollection>({
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  questions: [{ type: Schema.Types.ObjectId, ref: 'Question' }],
+  question: { type: Schema.Types.ObjectId, ref: 'Question', required: true },
 }, { timestamps: true });
 
 const Collection = models?.Collection || model<ICollection>('Collection', CollectionSchema);

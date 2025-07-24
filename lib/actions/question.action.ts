@@ -15,6 +15,7 @@ import Tag from '@/database/tag.model';
 
 import action from '../handlers/action';
 import { handleError } from '../handlers/error';
+import dbConnect from '../mongoose';
 import { AskQuestionSchema, GetQuestionSchema, IncrementViewsSchema, PaginatedSearchParamsSchema, UpdateQuestionSchema } from '../validations';
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<Question>> {
@@ -317,6 +318,18 @@ export async function incrementViews(params: IncrementViewsParams): Promise<Acti
     revalidatePath(ROUTES.QUESTION_DETAILS(questionId));
 
     return { success: true, data: JSON.parse(JSON.stringify(question)) };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function getHotQuestions(): Promise<ActionResponse<Question[]>> {
+  try {
+    await dbConnect();
+
+    const questions = await Question.find({}).sort({ views: -1, upvotes: -1 }).limit(5);
+
+    return { success: true, data: JSON.parse(JSON.stringify(questions)) };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

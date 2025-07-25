@@ -71,3 +71,11 @@ type GetUserAnswersParams = PaginatedSearchParams & {
 type GetUserTopTagsParams = {
   userId: string;
 };
+
+type DeleteQuestionParams = {
+  questionId: string;
+};
+
+type DeleteAnswerParams = {
+  answerId: string;
+};

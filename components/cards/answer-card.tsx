@@ -7,15 +7,17 @@ import { cn, getTimeStamp } from '@/lib/utils';
 
 import { Preview } from '../editor/preview';
 import { UserAvatar } from '../user-avatar';
+import { EditDeleteAction } from '../user/edit-delete-action';
 import { Votes, VotesSkeleton } from '../votes/votes';
 
 type Props = Answer & {
   containerClasses?: string;
   showReadMore?: boolean;
+  showActionBtns?: boolean;
 };
 
 export function AnswerCard(props: Props) {
-  const { _id, content, author, createdAt, upvotes, downvotes, containerClasses, showReadMore = false, question } = props;
+  const { _id, content, author, createdAt, upvotes, downvotes, containerClasses, showReadMore = false, question, showActionBtns = false } = props;
 
   const hasVotedPromise = hasVoted({
     targetId: _id,
@@ -25,6 +27,12 @@ export function AnswerCard(props: Props) {
   return (
     <article className={cn('light-border border-b py-10', containerClasses)}>
       <span id={JSON.stringify(_id)} className="hash-span" />
+
+      {showActionBtns && (
+        <div className="background-light800 flex-center absolute -right-2 -top-5 size-9 rounded-full">
+          <EditDeleteAction type="Answer" itemId={_id} />
+        </div>
+      )}
 
       <div className="mb-5 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
         <div className="flex flex-1 items-start gap-1 sm:items-center">

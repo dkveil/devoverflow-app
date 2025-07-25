@@ -141,7 +141,13 @@ export default async function Profile({ params, searchParams }: RouteParams) {
               render={questions => (
                 <div className="flex w-full flex-col gap-6">
                   {Array.isArray(questions) && questions.map(question => (
-                    <QuestionCard key={question._id} question={question} />
+                    <QuestionCard
+                      key={question._id}
+                      question={question}
+                      showActionBtns={
+                        loggedInUser?.user?.id === question.author._id
+                      }
+                    />
                   ))}
                 </div>
               )}
@@ -163,6 +169,9 @@ export default async function Profile({ params, searchParams }: RouteParams) {
                       content={answer.content.slice(0, 27)}
                       containerClasses="card-wrapper rounded-[10px] px-7 py-9 sm:px-11"
                       showReadMore
+                      showActionBtns={
+                        loggedInUser?.user?.id === answer.author._id
+                      }
                     />
                   ))}
                 </div>

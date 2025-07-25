@@ -1,15 +1,16 @@
 'use server';
 
 import mongoose from 'mongoose';
+import { revalidatePath } from 'next/cache';
 
 import type { IAnswer } from '@/database/answer.model';
 
-import { Answer, Question } from '@/database';
+import { Answer, Question, Vote } from '@/database';
 
 import action from '../handlers/action';
 import { handleError } from '../handlers/error';
 import { NotFoundError } from '../http-errors';
-import { CreateAnswerSchema, GetQuestionAnswersSchema } from '../validations';
+import { CreateAnswerSchema, DeleteAnswerSchema, GetQuestionAnswersSchema } from '../validations';
 
 export async function createAnswer(params: CreateAnswerParams): Promise<ActionResponse<IAnswer>> {
   const validationResult = await action({
@@ -106,6 +107,47 @@ export async function getQuestionAnswers(params: GetQuestionAnswersParams): Prom
     };
 
     return { success: true, data: { answers: JSON.parse(JSON.stringify(answers)), pagination } };
+  } catch (error) {
+    return handleError(error) as ErrorResponse;
+  }
+}
+
+export async function deleteAnswer(
+  params: DeleteAnswerParams,
+): Promise<ActionResponse> {
+  const validationResult = await action({
+    params,
+    schema: DeleteAnswerSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return handleError(validationResult) as ErrorResponse;
+  }
+
+  const { answerId } = validationResult.params!;
+  const { user } = validationResult.session!;
+
+  try {
+    const answer = await Answer.findById(answerId);
+    if (!answer) throw new Error('Answer not found');
+
+    if (answer.author.toString() !== user?.id)
+      throw new Error('You\'re not allowed to delete this answer');
+
+    await Question.findByIdAndUpdate(
+      answer.question,
+      { $inc: { answers: -1 } },
+      { new: true },
+    );
+
+    await Vote.deleteMany({ actionId: answerId, actionType: 'answer' });
+
+    await Answer.findByIdAndDelete(answerId);
+
+    revalidatePath(`/profile/${user?.id}`);
+
+    return { success: true };
   } catch (error) {
     return handleError(error) as ErrorResponse;
   }

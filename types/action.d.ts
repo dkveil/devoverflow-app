@@ -93,3 +93,10 @@ type UpdateReputationParams = {
   performerId: string;
   authorId: string;
 };
+
+type RecommendationParams = {
+  userId: string;
+  query?: string;
+  skip: number;
+  limit: number;
+};

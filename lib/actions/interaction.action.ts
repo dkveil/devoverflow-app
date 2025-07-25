@@ -1,3 +1,5 @@
+'use server';
+
 import mongoose from 'mongoose';
 
 import type { IInteractionDoc } from '@/database/interaction.model';

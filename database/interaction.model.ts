@@ -2,16 +2,7 @@ import type { Document, Types } from 'mongoose';
 
 import { model, models, Schema } from 'mongoose';
 
-export const InteractionActionEnums = [
-  'view',
-  'upvote',
-  'downvote',
-  'bookmark',
-  'post',
-  'edit',
-  'delete',
-  'search',
-] as const;
+import { InteractionActionEnums } from '@/lib/validations';
 
 export type IInteraction = {
   user: Types.ObjectId;

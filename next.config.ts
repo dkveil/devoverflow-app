@@ -1,6 +1,11 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
   serverExternalPackages: ['pino', 'pino-pretty', 'mongoose'],
   images: {
     remotePatterns: [
@@ -22,6 +27,11 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'avatars.githubusercontent.com',
+        port: '',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
         port: '',
       },
     ],

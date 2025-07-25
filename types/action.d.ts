@@ -100,3 +100,8 @@ type RecommendationParams = {
   skip: number;
   limit: number;
 };
+
+type JobFilterParams = {
+  query: string;
+  page: number;
+};

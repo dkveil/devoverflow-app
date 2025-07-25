@@ -115,3 +115,10 @@ export const userFilters = [
   { name: 'Oldest Users', value: 'oldest' },
   { name: 'Top Contributors', value: 'top-contributors' },
 ];
+
+export const GlobalSearchFilters = [
+  { name: 'Question', value: 'question' },
+  { name: 'Answer', value: 'answer' },
+  { name: 'User', value: 'user' },
+  { name: 'Tag', value: 'tag' },
+];

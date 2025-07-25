@@ -172,6 +172,12 @@ declare global {
       common: string;
     };
   };
+
+  type GlobalSearchedItem = {
+    id: string;
+    title: string;
+    type: string;
+  };
 }
 
 export {};

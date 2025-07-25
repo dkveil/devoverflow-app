@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { auth } from '@/auth';
+import { GlobalSearch } from '@/components/search/global-search';
 import { UserAvatar } from '@/components/user-avatar';
 
 import { MobileNavigation } from './mobile-navigation';
@@ -22,9 +23,7 @@ export default async function Navbar() {
         </p>
       </Link>
 
-      <span>
-        search
-      </span>
+      <GlobalSearch />
 
       <div className="flex-between gap-5">
         <ThemeToggler />

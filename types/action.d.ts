@@ -105,3 +105,8 @@ type JobFilterParams = {
   query: string;
   page: number;
 };
+
+type GlobalSearchParams = {
+  query: string;
+  type?: string | null;
+};

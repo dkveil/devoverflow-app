@@ -146,6 +146,12 @@ declare global {
     SILVER: number;
     BRONZE: number;
   };
+
+  type Badges = {
+    GOLD: number;
+    SILVER: number;
+    BRONZE: number;
+  };
 }
 
 export {};

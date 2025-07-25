@@ -13,7 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { UserAvatar } from '@/components/user-avatar';
 import { ProfileLink } from '@/components/user/profie-link';
 import { Stats } from '@/components/user/stats';
-import { getUser, getUserAnswers, getUserQuestions, getUserTopTags } from '@/lib/actions/user.action';
+import { getUser, getUserAnswers, getUserQuestions, getUserStats, getUserTopTags } from '@/lib/actions/user.action';
 
 export default async function Profile({ params, searchParams }: RouteParams) {
   const { id } = await params;
@@ -52,9 +52,12 @@ export default async function Profile({ params, searchParams }: RouteParams) {
     userId: id,
   });
 
+  const { data: userStats } = await getUserStats({ userId: id });
+
   const { questions, pagination: questionsPagination } = dataQuestions!;
   const { answers, pagination: answersPagination } = userAnswers!;
   const { tags } = dataTopTags!;
+
   return (
     <>
       <section className="flex flex-col-reverse items-start justify-between sm:flex-row">
@@ -113,11 +116,7 @@ export default async function Profile({ params, searchParams }: RouteParams) {
       <Stats
         totalQuestions={totalQuestions}
         totalAnswers={totalAnswers}
-        badges={{
-          GOLD: 0,
-          SILVER: 0,
-          BRONZE: 0,
-        }}
+        badges={userStats?.badges || { GOLD: 0, SILVER: 0, BRONZE: 0 }}
         points={user.reputation || 0}
       />
 

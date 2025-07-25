@@ -5,6 +5,9 @@ import { handleError } from '@/lib/handlers/error';
 import { ValidationError } from '@/lib/http-errors';
 import { AIAnswerSchema } from '@/lib/validations';
 
+export const runtime = 'edge';
+export const maxDuration = 5;
+
 export async function POST(request: Request) {
   const { question, content, userAnswer } = await request.json();
 

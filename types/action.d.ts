@@ -79,3 +79,17 @@ type DeleteQuestionParams = {
 type DeleteAnswerParams = {
   answerId: string;
 };
+
+type CreateInteractionParams = {
+  action: (typeof InteractionActionEnums)[number];
+  actionTarget: 'question' | 'answer';
+  actionId: string;
+  authorId: string;
+};
+
+type UpdateReputationParams = {
+  interaction: IInteractionDoc;
+  session: mongoose.ClientSession;
+  performerId: string;
+  authorId: string;
+};

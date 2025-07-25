@@ -4,6 +4,7 @@ import type { FilterQuery } from 'mongoose';
 
 import mongoose from 'mongoose';
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/dist/server/after';
 import { z } from 'zod';
 
 import type { ITagDoc } from '@/database/tag.model';
@@ -15,6 +16,7 @@ import action from '../handlers/action';
 import { handleError } from '../handlers/error';
 import dbConnect from '../mongoose';
 import { AskQuestionSchema, DeleteQuestionSchema, GetQuestionSchema, IncrementViewsSchema, PaginatedSearchParamsSchema, UpdateQuestionSchema } from '../validations';
+import { createInteraction } from './interaction.action';
 
 export async function createQuestion(params: CreateQuestionParams): Promise<ActionResponse<Question>> {
   const validationResult = await action({
@@ -57,6 +59,15 @@ export async function createQuestion(params: CreateQuestionParams): Promise<Acti
 
     await TagQuestion.insertMany(tagQuestionDocuments, { session });
     await Question.findByIdAndUpdate(question._id, { $push: { tags: { $each: tagIds } } }, { session });
+
+    after(async () => {
+      await createInteraction({
+        action: 'post',
+        actionId: question._id.toString(),
+        actionTarget: 'question',
+        authorId: userId as string,
+      });
+    });
 
     await session.commitTransaction();
 

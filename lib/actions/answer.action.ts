@@ -2,6 +2,7 @@
 
 import mongoose from 'mongoose';
 import { revalidatePath } from 'next/cache';
+import { after } from 'next/dist/server/after';
 
 import type { IAnswer } from '@/database/answer.model';
 
@@ -11,6 +12,7 @@ import action from '../handlers/action';
 import { handleError } from '../handlers/error';
 import { NotFoundError } from '../http-errors';
 import { CreateAnswerSchema, DeleteAnswerSchema, GetQuestionAnswersSchema } from '../validations';
+import { createInteraction } from './interaction.action';
 
 export async function createAnswer(params: CreateAnswerParams): Promise<ActionResponse<IAnswer>> {
   const validationResult = await action({
@@ -44,6 +46,15 @@ export async function createAnswer(params: CreateAnswerParams): Promise<ActionRe
 
     question.answers += 1;
     await question.save({ session });
+
+    after(async () => {
+      await createInteraction({
+        action: 'post',
+        actionId: newAnswer._id.toString(),
+        actionTarget: 'answer',
+        authorId: userId as string,
+      });
+    });
 
     await session.commitTransaction();
 

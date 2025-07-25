@@ -118,6 +118,7 @@ export default async function Profile({ params, searchParams }: RouteParams) {
           SILVER: 0,
           BRONZE: 0,
         }}
+        points={user.reputation || 0}
       />
 
       <section className="mt-10 flex gap-10">

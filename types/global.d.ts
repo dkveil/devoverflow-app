@@ -34,6 +34,7 @@ declare global {
     upvotes: number;
     downvotes: number;
     createdAt: Date;
+    question: Question;
   };
 
   type ActionResponse<T = null> = {
@@ -131,12 +132,19 @@ declare global {
       linkedin: string;
       website: string;
     };
+    createdAt: Date;
   };
 
   type Collection = {
     _id: string;
     author: string | Author;
     question: Question;
+  };
+
+  type BadgeCounts = {
+    GOLD: number;
+    SILVER: number;
+    BRONZE: number;
   };
 }
 

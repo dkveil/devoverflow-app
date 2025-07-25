@@ -55,3 +55,19 @@ type HasVotedResponse = {
 type CollectionBaseParams = {
   questionId?: string;
 };
+
+type GetUserParams = {
+  userId: string;
+};
+
+type GetUserQuestionsParams = Omit<PaginatedSearchParams, 'query' | 'filter' | 'sort'> & {
+  userId: string;
+};
+
+type GetUserAnswersParams = PaginatedSearchParams & {
+  userId: string;
+};
+
+type GetUserTopTagsParams = {
+  userId: string;
+};
